@@ -19,7 +19,7 @@ abstract class AggregateRootId implements \JsonSerializable
         return $this->uuid;
     }
 
-    public static function fromString(string $uuid): static
+    public static function fromString(\Symfony\Component\Uid\UuidV7 $uuid): static
     {
         return new static(Uuid::fromString($uuid));
     }

@@ -6,7 +6,6 @@ namespace Modules\Invoices\Application\CommandHandlers;
 use Illuminate\Support\Facades\Event;
 use Modules\Invoices\Application\Commands\CreateInvoiceCommand;
 use Modules\Invoices\Domain\Entities\Invoice;
-use Modules\Invoices\Domain\Enums\StatusEnum;
 use Modules\Invoices\Domain\Repositories\InvoiceRepositoryInterface;
 
 readonly class CreateInvoiceHandler

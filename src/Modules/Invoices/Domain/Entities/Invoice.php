@@ -31,13 +31,12 @@ class Invoice extends AggregateRoot
     public static function create(
         InvoiceId    $id,
         CustomerInfo $customerInfo,
-        StatusEnum   $status = StatusEnum::Draft,
     ): self
     {
         $invoice = new self(
             id: $id,
             customerInfo: $customerInfo,
-            status: $status,
+            status: StatusEnum::Draft,
         );
 
         // $invoice->raise(new InvoiceCreatedEvent($id));
