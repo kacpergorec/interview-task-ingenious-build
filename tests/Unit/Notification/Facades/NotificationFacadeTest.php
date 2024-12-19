@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Notification\Facades;
 
+use Faker\Factory;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Modules\Notifications\Api\Dtos\NotifyData;
