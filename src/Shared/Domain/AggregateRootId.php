@@ -5,7 +5,7 @@ namespace Shared\Domain;
 
 use Symfony\Component\Uid\Uuid;
 
-abstract class AggregateRootId
+abstract class AggregateRootId implements \JsonSerializable
 {
     protected Uuid $uuid;
 
@@ -19,9 +19,14 @@ abstract class AggregateRootId
         return $this->uuid;
     }
 
-    public static function fromString(string $uuid): self
+    public static function fromString(string $uuid): static
     {
         return new static(Uuid::fromString($uuid));
+    }
+
+    public function jsonSerialize(): string
+    {
+        return static::toUuid()->toString();
     }
 
     public function __toString(): string
@@ -29,7 +34,7 @@ abstract class AggregateRootId
         return $this->uuid->toString();
     }
 
-    public static function new() : self
+    public static function new(): static
     {
         return new static(Uuid::v7());
     }

@@ -27,7 +27,7 @@ class InvoiceMapper
                 id: new InvoiceProductLineId(Uuid::fromString($line->id)),
                 name: $line->name,
                 quantity: $line->quantity,
-                price: new Money($line->price),
+                price: new Money($line->unit_price),
                 totalUnitPrice: new Money($line->total_unit_price)
             );
         }

@@ -6,13 +6,14 @@ namespace Modules\Invoices\Presentation\Http;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Modules\Invoices\Application\QueryHandlers\GetInvoiceHandler;
+use Illuminate\Support\Facades\Event;
+use Modules\Invoices\Api\Events\InvoiceCreationRequestEvent;
+use Modules\Invoices\Api\Factory\InvoiceDtoFactory;
+use Modules\Invoices\Application\Dtos\InvoiceDto;
 use Modules\Invoices\Application\Queries\GetInvoiceQuery;
-use Modules\Invoices\Domain\Repositories\InvoiceQueryRepositoryInterface;
+use Modules\Invoices\Application\QueryHandlers\GetInvoiceHandler;
 use Modules\Invoices\Domain\ValueObjects\InvoiceId;
-use Modules\Notifications\Application\Services\NotificationService;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Uid\Uuid;
 
 final readonly class InvoiceController
 {
@@ -28,8 +29,10 @@ final readonly class InvoiceController
 
     public function store(Request $request): JsonResponse
     {
-        dd($request->all());
-        return new JsonResponse('todo store');
+        $dto = InvoiceDtoFactory::fromRequest($request);
+        Event::dispatch(new InvoiceCreationRequestEvent($dto));
+
+        return new JsonResponse($dto->id, Response::HTTP_ACCEPTED);
     }
 
     public function send(): JsonResponse

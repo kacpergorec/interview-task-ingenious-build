@@ -25,6 +25,7 @@ class Invoice extends AggregateRoot
         private StatusEnum            $status = StatusEnum::Draft,
     )
     {
+        $this->totalPrice = new Money(0);
     }
 
     public static function create(
@@ -33,11 +34,15 @@ class Invoice extends AggregateRoot
         StatusEnum   $status = StatusEnum::Draft,
     ): self
     {
-        return new self(
+        $invoice = new self(
             id: $id,
             customerInfo: $customerInfo,
             status: $status,
         );
+
+        // $invoice->raise(new InvoiceCreatedEvent($id));
+
+        return $invoice;
     }
 
     public static function recreate(
