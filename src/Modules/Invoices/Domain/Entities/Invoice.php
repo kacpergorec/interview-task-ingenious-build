@@ -4,6 +4,7 @@ declare (strict_types=1);
 namespace Modules\Invoices\Domain\Entities;
 
 use Modules\Invoices\Domain\Enums\StatusEnum;
+use Modules\Invoices\Domain\Events\InvoiceCreatedEvent;
 use Modules\Invoices\Domain\Events\InvoiceSendingEvent;
 use Modules\Invoices\Domain\Events\InvoiceSentEvent;
 use Modules\Invoices\Domain\ValueObjects\CustomerInfo;
@@ -39,7 +40,7 @@ class Invoice extends AggregateRoot
             status: StatusEnum::Draft,
         );
 
-        // $invoice->raise(new InvoiceCreatedEvent($id));
+         $invoice->raise(new InvoiceCreatedEvent($id));
 
         return $invoice;
     }
