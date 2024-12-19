@@ -3,7 +3,9 @@ declare (strict_types=1);
 
 namespace Tests\Unit\Invoices\Domain\Entities;
 
+use Modules\Invoices\Domain\Events\InvoiceCreatedEvent;
 use Modules\Invoices\Domain\Events\InvoiceSendingEvent;
+use Modules\Invoices\Domain\Events\InvoiceSentEvent;
 use PHPUnit\Framework\TestCase;
 use Modules\Invoices\Domain\Entities\Invoice;
 use Modules\Invoices\Domain\Enums\StatusEnum;
@@ -27,7 +29,7 @@ class InvoiceTest extends TestCase
         $this->customerInfo = new CustomerInfo('Han Solo', 'han.solo@korelia.xyz');
     }
 
-    public function testInvoiceCreation() : void
+    public function testInvoiceCreation(): void
     {
         $invoice = Invoice::create($this->invoiceId, $this->customerInfo);
 
@@ -37,7 +39,7 @@ class InvoiceTest extends TestCase
         $this->assertEquals(StatusEnum::Draft, $invoice->getStatus());
     }
 
-    public function testAddProductLine() : void
+    public function testAddProductLine(): void
     {
         $invoice = Invoice::create($this->invoiceId, $this->customerInfo);
 
@@ -64,7 +66,7 @@ class InvoiceTest extends TestCase
         $this->assertTrue($productLine->price->isEqual(new Money(100)));
     }
 
-    public function testSendInvoice() : void
+    public function testSendInvoice(): void
     {
         $invoice = Invoice::create($this->invoiceId, $this->customerInfo);
 
@@ -74,12 +76,12 @@ class InvoiceTest extends TestCase
 
 
         $this->assertEquals(StatusEnum::Sending, $invoice->getStatus());
-        $this->assertEquals(InvoiceSendingEvent::class, $invoice->pullEvents()[0]::class);
+        $this->assertContains(InvoiceSendingEvent::class, array_map(fn($event) => $event::class, $invoice->pullEvents()));
 
         //todo: check if event is raised
     }
 
-    public function testMarkInvoiceAsSent() : void
+    public function testMarkInvoiceAsSent(): void
     {
         $invoice = Invoice::create($this->invoiceId, $this->customerInfo);
         $invoice->send();
@@ -87,12 +89,12 @@ class InvoiceTest extends TestCase
         $invoice->markAsSent();
 
         $this->assertEquals(StatusEnum::SentToClient, $invoice->getStatus());
-        $this->assertEquals(InvoiceSendingEvent::class, $invoice->pullEvents()[0]::class);
+        $this->assertContains(InvoiceSentEvent::class, array_map(fn($event) => $event::class, $invoice->pullEvents()));
 
         // todo: check if event is raised
     }
 
-    public function testCannotSendInvoiceIfNotInDraft() : void
+    public function testCannotSendInvoiceIfNotInDraft(): void
     {
         $invoice = Invoice::create($this->invoiceId, $this->customerInfo);
         $invoice->send();
@@ -101,7 +103,7 @@ class InvoiceTest extends TestCase
         $invoice->send();
     }
 
-    public function testCannotMarkAsSentIfNotSending() : void
+    public function testCannotMarkAsSentIfNotSending(): void
     {
         $invoice = Invoice::create($this->invoiceId, $this->customerInfo);
 
