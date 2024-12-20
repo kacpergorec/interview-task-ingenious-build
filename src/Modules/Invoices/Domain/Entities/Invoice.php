@@ -104,14 +104,21 @@ class Invoice extends AggregateRoot
         }
     }
 
+    public function tryChangeStatus(StatusEnum $status): void
+    {
+        match ($status) {
+            StatusEnum::Sending => $this->send(),
+            StatusEnum::SentToClient => $this->markAsSent(),
+            default => throw new \DomainException("Invalid status change"),
+        };
+    }
+
+
     public function send(): void
     {
         if ($this->status !== StatusEnum::Draft) {
             throw new \DomainException("Cannot send an invoice that is not in draft status");
         }
-
-        // additional check before send - important for business logic
-        $this->validateProductLines();
 
         $this->status = StatusEnum::Sending;
 
@@ -168,7 +175,8 @@ class Invoice extends AggregateRoot
     }
 
 
-    private function validateProductLines() : void
+    // additional check before send - important for business logic
+    public function validateProductLines() : void
     {
         foreach ($this->invoiceProductLines as $productLine) {
             if ($productLine->quantity <= 0 || $productLine->price->value <= 0) {

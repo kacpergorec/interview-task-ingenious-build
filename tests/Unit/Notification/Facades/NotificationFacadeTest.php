@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Notification\Facades;
 
-use Faker\Factory;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Str;
 use Modules\Notifications\Api\Dtos\NotifyData;
 use Modules\Notifications\Application\Facades\NotificationFacade;
 use Modules\Notifications\Infrastructure\Drivers\DriverInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
 
 final class NotificationFacadeTest extends TestCase
 {
@@ -33,7 +32,7 @@ final class NotificationFacadeTest extends TestCase
     public function testDelivered(): void
     {
         $data = new NotifyData(
-            resourceId: Str::uuid(),
+            resourceId: Uuid::v7(),
             toEmail: $this->faker->email(),
             subject: $this->faker->sentence(),
             message: $this->faker->sentence(),

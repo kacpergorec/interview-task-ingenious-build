@@ -8,7 +8,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Modules\Invoices\Api\Events\InvoiceCreationRequestEvent;
+use Modules\Invoices\Api\Events\InvoiceSendRequestEvent;
 use Modules\Invoices\Api\Factory\InvoiceDtoFactory;
+use Modules\Invoices\Application\CommandHandlers\SendInvoiceHandler;
+use Modules\Invoices\Application\Commands\SendInvoiceCommand;
 use Modules\Invoices\Application\Queries\GetInvoiceQuery;
 use Modules\Invoices\Application\QueryHandlers\GetInvoiceHandler;
 use Modules\Invoices\Domain\ValueObjects\InvoiceId;
@@ -34,8 +37,11 @@ final readonly class InvoiceController
         return new JsonResponse($dto->id, Response::HTTP_CREATED);
     }
 
-    public function send(): JsonResponse
+    public function send(string $id): JsonResponse
     {
-        return new JsonResponse('todo send');
+        $id = InvoiceId::fromString($id);
+        Event::dispatch(new InvoiceSendRequestEvent($id));
+
+        return new JsonResponse('Invoice sending initiated.', Response::HTTP_ACCEPTED);
     }
 }

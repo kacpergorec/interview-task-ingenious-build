@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Bus;
 use Modules\Invoices\Api\Events\InvoiceCreationRequestEvent;
 use Modules\Invoices\Application\Commands\CreateInvoiceCommand;
 use Modules\Invoices\Application\Dtos\InvoiceDto;
-use Modules\Invoices\Application\EventSubscribers\InvoiceCreationSubscriber;
+use Modules\Invoices\Application\EventSubscribers\InvoiceCreationRequestSubscriber;
 use Modules\Invoices\Domain\ValueObjects\CustomerInfo;
 use Modules\Invoices\Domain\ValueObjects\InvoiceId;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +27,7 @@ class InvoiceCreationSubscriberTest extends TestCase
 
         Bus::fake();
 
-        $subscriber = new InvoiceCreationSubscriber();
+        $subscriber = new InvoiceCreationRequestSubscriber();
         $subscriber->handle($event);
 
         Bus::assertDispatched(CreateInvoiceCommand::class, function (CreateInvoiceCommand $command) use ($invoiceDto) {

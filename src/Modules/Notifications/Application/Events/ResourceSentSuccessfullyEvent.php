@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Modules\Notifications\Api\Events;
+namespace Modules\Notifications\Application\Events;
 
 use Symfony\Component\Uid\Uuid;
 
-final readonly class ResourceDeliveredEvent
+final readonly class ResourceSentSuccessfullyEvent
 {
     public function __construct(
         public Uuid $resourceId,

@@ -16,23 +16,32 @@ class InvoiceRepository implements InvoiceRepositoryInterface
         DB::beginTransaction();
 
         try {
-            $eloquentInvoice = InvoiceModel::create([
-                'id' => $invoice->id,
-                'customer_name' => $invoice->customerInfo->name,
-                'customer_email' => $invoice->customerInfo->email,
-                'status' => $invoice->getStatus(),
-                'total_price' => $invoice->getTotalPrice()->value,
-            ]);
+            $eloquentInvoice = InvoiceModel::updateOrCreate(
+                ['id' => $invoice->id],
+                [
+                    'customer_name' => $invoice->customerInfo->name,
+                    'customer_email' => $invoice->customerInfo->email,
+                    'status' => $invoice->getStatus(),
+                    'total_price' => $invoice->getTotalPrice()->value,
+                ]
+            );
 
+            $invoiceLinesData = [];
             foreach ($invoice->getInvoiceProductLines() as $line) {
-                $eloquentInvoice->invoiceLines()->create([
+                $invoiceLinesData[] = [
                     'id' => $line->id,
                     'name' => $line->name,
                     'quantity' => $line->quantity,
                     'unit_price' => $line->price->value,
                     'total_unit_price' => $line->getTotalUnitPrice()->value,
-                ]);
+                ];
             }
+
+            $eloquentInvoice->invoiceLines()->upsert(
+                $invoiceLinesData,
+                ['id'],
+                ['name', 'quantity', 'unit_price', 'total_unit_price']
+            );
 
             DB::commit();
         } catch (\Exception $e) {
@@ -45,4 +54,5 @@ class InvoiceRepository implements InvoiceRepositoryInterface
             throw $e;
         }
     }
+
 }

@@ -6,7 +6,7 @@ namespace Modules\Notifications\Application\Services;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Modules\Notifications\Api\Events\ResourceDeliveredEvent;
-use Ramsey\Uuid\Uuid;
+use Symfony\Component\Uid\Uuid;
 
 final readonly class NotificationService
 {

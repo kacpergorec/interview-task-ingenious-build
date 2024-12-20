@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Bus;
 use Modules\Invoices\Api\Events\InvoiceCreationRequestEvent;
 use Modules\Invoices\Application\Commands\CreateInvoiceCommand;
 
-readonly class InvoiceCreationSubscriber
+readonly class InvoiceCreationRequestSubscriber
 {
     public function handle(InvoiceCreationRequestEvent $event): void
     {

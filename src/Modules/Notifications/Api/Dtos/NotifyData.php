@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Modules\Notifications\Api\Dtos;
 
-use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Uid\Uuid;
 
 final readonly class NotifyData
 {
     public function __construct(
-        public UuidInterface $resourceId,
+        public Uuid $resourceId,
         public string $toEmail,
         public string $subject,
         public string $message,
