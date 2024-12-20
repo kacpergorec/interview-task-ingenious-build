@@ -84,6 +84,10 @@ class Invoice extends AggregateRoot
         Money                $unitPrice,
     ): void
     {
+        if ($quantity <= 0 || $unitPrice->value <= 0) {
+            throw new \DomainException("Product line must have quantity and price greater than zero");
+        }
+
         $this->invoiceProductLines[] = new InvoiceProductLine(
             id: $productLineId,
             name: $name,

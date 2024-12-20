@@ -51,7 +51,7 @@ I didn’t use `final` in this project that much due to time constraints and cha
 I’m more accustomed to working with **3 folders**: **Application**, **Domain**, and **Infrastructure**. The separation into **5 folders** for **API** and **Presentation** was a bit unfamiliar, though I believe I understand the intended layer separation.
 
 ### Exceptions
-Looking back, I could have implemented **domain-specific exceptions** as well as general exceptions for other layers.
+Looking back, I could have implemented **domain-specific exceptions** as well as general exceptions for other layers. Then return appropriate HTTP status codes like bad request to client.
 
 
 ## Conclusion
