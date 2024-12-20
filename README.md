@@ -4,7 +4,6 @@
 > Thanks to everyone involved in the recruitment process! I really appreciate your time and the opportunity.
 
 
----
 ## Project Overview
 - **PHP 8.3**, 
 - **Laravel**, 
@@ -15,7 +14,7 @@
 ## Goal
 A simple app to **save**, **retrieve**, and **send invoices**, with a emphasis on DDD, Events and Unit Tests.
 
----
+
 ## Thought Process
 ### Repositories
 I try to keep a framework-agnostic approach, but my years of experience with Symfony have made the Repository Pattern feel comfortable, so I ended up enforcing it. I separated the repositories into query repositories and regular repositories.
@@ -43,7 +42,6 @@ Customer is a **ValueObject**, though it could be an **Entity** if it had a more
 ### Resending Failed Invoices
 I added a **commented-out example** for resending failed invoices. While this wasn’t part of the original requirements, I think it’s a crucial feature for a real-world applicationŌ.
 
----
 
 ## Project Challenges
 ### Finals
@@ -54,3 +52,7 @@ I’m more accustomed to working with **3 folders**: **Application**, **Domain**
 
 ### Exceptions
 Looking back, I could have implemented **domain-specific exceptions** as well as general exceptions for other layers.
+
+
+## Conclusion
+I enjoyed working on this project and I hope it showcases my skills. I appreciate the opportunity and I look forward to hearing your feedback. Thank you for your time and consideration.
