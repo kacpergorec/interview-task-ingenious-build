@@ -1,55 +1,56 @@
-## Invoice Structure:
+[See original project specifications here.](ORIGINAL_README.md)
 
-The invoice should contain the following fields:
-* **Invoice ID**: Auto-generated during creation.
-* **Invoice Status**: Possible states include `draft,` `sending,` and `sent-to-client`.
-* **Customer Name** 
-* **Customer Email** 
-* **Invoice Product Lines**, each with:
-  * **Product Name**
-  * **Quantity**: Integer, must be positive. 
-  * **Unit Price**: Integer, must be positive.
-  * **Total Unit Price**: Calculated as Quantity x Unit Price. 
-* **Total Price**: Sum of all Total Unit Prices.
+> [!NOTE]
+> Thanks to everyone involved in the recruitment process! I really appreciate your time and the opportunity.
 
-## Required Endpoints:
 
-1. **View Invoice**: Retrieve invoice data in the format above.
-2. **Create Invoice**: Initialize a new invoice.
-3. **Send Invoice**: Handle the sending of an invoice.
+---
+## Project Overview
+- **PHP 8.3**, 
+- **Laravel**, 
+- **PHPUnit**,
+- **Docker**,
+- **SQLite**
 
-## Functional Requirements:
+## Goal
+A simple app to **save**, **retrieve**, and **send invoices**, with a emphasis on DDD, Events and Unit Tests.
 
-### Invoice Criteria:
+---
+## Thought Process
+### Repositories
+I try to keep a framework-agnostic approach, but my years of experience with Symfony have made the Repository Pattern feel comfortable, so I ended up enforcing it. I separated the repositories into query repositories and regular repositories.
 
-* An invoice can only be created in `draft` status. 
-* An invoice can be created with empty product lines. 
-* An invoice can only be sent if it is in `draft` status. 
-* An invoice can only be marked as `sent-to-client` if its current status is `sending`. 
-* To be sent, an invoice must contain product lines with both quantity and unit price as positive integers greater than **zero**.
+- [QueryRepository.php]() 
+- [Repository.php]()
 
-### Invoice Sending Workflow:
+The retrieved model is directly mapped to a Domain entity. Looking back, I think it would have been cleaner to map it to an Infrastructural DTO first and then pass that to the Application service.
 
-* **Send an email notification** to the customer using the `NotificationFacade`. 
-  * The email's subject and message may be hardcoded or customized as needed. 
-  * Change the **Invoice Status** to `sending` after sending the notification.
+### Money ValueObject
+I added the Money ValueObject to future-proof the maintainability of the project, especially if it heads toward international sales. I think it's a good practice to include it when the project is moving in that direction.
 
-### Delivery:
+### UUID Library Change
+I switched from **Ramsey UUID** to **Symfony UUIDs** because I realized a bit too late that the project already used an exsiting UUID library. Refactoring provided code to Symfony UUIDs was quicker.
 
-* Upon successful delivery by the Dummy notification provider:
-  * The **Notification Module** triggers a `ResourceDeliveredEvent` via webhook.
-  * The **Invoice Module** listens for and captures this event.
-  * The **Invoice Status** is updated from `sending` to `sent-to-client`.
-  * **Note**: This transition requires that the invoice is currently in the `sending` status.
+### Domain Validation
+Domain validation is **bound to the entity** to ensure business rules are enforced consistently.
 
-## Technical Requirements:
+### JSON Errors
+One change I would make, if I had more time, is to add middleware (or use try-catch in controllers) to format exceptions into readable JSON.
 
-* **Preferred Approach**: Domain-Driven Design (DDD) is preferred for this project. If you have experience with DDD, please feel free to apply this methodology. However, if you are more comfortable with another approach, you may choose an alternative structure.
-* **Alternative Submission**: If you have a different, comparable project or task that showcases your skills, you may submit that instead of creating this task.
-* **Unit Tests**: Core invoice logic should be unit tested. Testing the returned values from endpoints is not required.
-* **Documentation**: Candidates are encouraged to document their decisions and reasoning in comments or a README file, explaining why specific implementations or structures were chosen.
+### Customer
+Customer is a **ValueObject**, though it could be an **Entity** if it had a more complex lifecycle.
 
-## Setup Instructions:
+### Resending Failed Invoices
+I added a **commented-out example** for resending failed invoices. While this wasn’t part of the original requirements, I think it’s a crucial feature for a real-world applicationŌ.
 
-* Start the project by running `./start.sh`.
-* To access the container environment, use: `docker compose exec app bash`.
+---
+
+## Project Challenges
+### Finals
+I didn’t use `final` in this project that much due to time constraints and challenges with mocking. Given more time, I could have implemented `final` on certain services and mocked them through interfaces. 
+
+### Folder Structure
+I’m more accustomed to working with **3 folders**: **Application**, **Domain**, and **Infrastructure**. The separation into **5 folders** for **API** and **Presentation** was a bit unfamiliar, though I believe I understand the intended layer separation.
+
+### Exceptions
+Looking back, I could have implemented **domain-specific exceptions** as well as general exceptions for other layers.
