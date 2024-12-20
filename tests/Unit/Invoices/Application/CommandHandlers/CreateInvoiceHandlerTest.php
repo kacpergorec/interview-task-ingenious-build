@@ -25,7 +25,7 @@ class CreateInvoiceHandlerTest extends TestCase
     {
         $repositoryMock = $this->createMock(InvoiceRepository::class);
 
-        $invoiceId = new InvoiceId(Uuid::v7());
+        $invoiceId = InvoiceId::new();
         $customerInfo = new CustomerInfo('Han Solo', 'han.solo@korelia.xyz');
 
         $lineId = new InvoiceProductLineId(Uuid::v7());
@@ -62,7 +62,7 @@ class CreateInvoiceHandlerTest extends TestCase
             ->method('save')
             ->willThrowException(new \Exception('Database error'));
 
-        $invoiceId = new InvoiceId(Uuid::v7());
+        $invoiceId = InvoiceId::new();
         $customerInfo = new CustomerInfo('Han Solo', 'han.solo@korelia.xyz');
 
         $lineId = new InvoiceProductLineId(Uuid::v7());

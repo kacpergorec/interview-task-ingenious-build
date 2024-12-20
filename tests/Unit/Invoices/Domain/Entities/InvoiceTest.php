@@ -25,7 +25,7 @@ class InvoiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->invoiceId = new InvoiceId(Uuid::v7());
+        $this->invoiceId = InvoiceId::new();
         $this->customerInfo = new CustomerInfo('Han Solo', 'han.solo@korelia.xyz');
     }
 

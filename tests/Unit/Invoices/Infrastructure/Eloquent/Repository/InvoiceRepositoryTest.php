@@ -19,7 +19,7 @@ class InvoiceRepositoryTest extends TestCase
 
     public function testSaveInvoice(): void
     {
-        $invoiceId = new InvoiceId(Uuid::v7());
+        $invoiceId = InvoiceId::new();
         $customerInfo = new CustomerInfo('Han Solo', 'han.solo@korelia.xyz');
 
         $invoice = Invoice::create($invoiceId, $customerInfo);

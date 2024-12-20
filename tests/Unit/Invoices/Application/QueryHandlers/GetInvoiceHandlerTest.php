@@ -18,7 +18,7 @@ class GetInvoiceHandlerTest extends TestCase
     public function testHandleReturnsInvoice(): void
     {
         $repositoryMock = Mockery::mock(InvoiceQueryRepositoryInterface::class);
-        $invoiceId = new InvoiceId(Uuid::v7());
+        $invoiceId = InvoiceId::new();
         $invoice = Mockery::mock(Invoice::class);
 
         $repositoryMock->shouldReceive('find')
@@ -38,7 +38,7 @@ class GetInvoiceHandlerTest extends TestCase
     public function testHandleReturnsNullWhenInvoiceNotFound(): void
     {
         $repositoryMock = Mockery::mock(InvoiceQueryRepositoryInterface::class);
-        $invoiceId = new InvoiceId(Uuid::v7());
+        $invoiceId = InvoiceId::new();
 
         $repositoryMock->shouldReceive('find')
             ->with($invoiceId)

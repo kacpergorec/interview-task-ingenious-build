@@ -18,7 +18,7 @@ class InvoiceQueryRepositoryTest extends TestCase
 
     public function testFindInvoice(): void
     {
-        $invoiceId = new InvoiceId(Uuid::v7());
+        $invoiceId = InvoiceId::new();
         $invoiceLineId = new InvoiceProductLineId(Uuid::v7());
 
         $invoiceModel = InvoiceModel::create([
@@ -46,7 +46,7 @@ class InvoiceQueryRepositoryTest extends TestCase
 
     public function testFindInvoiceNotFound(): void
     {
-        $invoiceId = new InvoiceId(Uuid::v7());
+        $invoiceId = InvoiceId::new();
 
         $repository = new InvoiceQueryRepository();
         $invoice = $repository->find($invoiceId);

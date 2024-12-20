@@ -18,7 +18,7 @@ class InvoiceCreationSubscriberTest extends TestCase
     public function testHandleDispatchesCreateInvoiceCommand(): void
     {
         $invoiceDto = new InvoiceDto(
-            id: new InvoiceId(Uuid::v7()),
+            id: InvoiceId::new(),
             customerInfo: new CustomerInfo('Han Solo', 'han.solo@korelia.xyz'),
             invoiceLines: []
         );
