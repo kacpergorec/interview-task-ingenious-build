@@ -24,7 +24,6 @@ readonly class ChangeInvoiceStatusHandler
     public function handle(ChangeInvoiceStatusCommand $command): void
     {
         $invoice = $this->getInvoiceHandler->handle(new GetInvoiceQuery($command->id));
-
         if (!$invoice) {
             throw new \InvalidArgumentException('Invoice not found.');
         }
