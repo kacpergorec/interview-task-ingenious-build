@@ -22,16 +22,18 @@ class Invoice extends AggregateRoot
         public readonly CustomerInfo $customerInfo,
 
         /** @var InvoiceProductLine[] */
-        private array                 $invoiceProductLines = [],
-        private StatusEnum            $status = StatusEnum::Draft,
+        private array                $invoiceProductLines = [],
+        private StatusEnum           $status = StatusEnum::Draft,
     )
     {
         $this->totalPrice = new Money(0);
     }
 
+    /** @param InvoiceProductLine[] $invoiceProductLines */
     public static function create(
         InvoiceId    $id,
         CustomerInfo $customerInfo,
+        array        $invoiceProductLines = [],
     ): self
     {
         $invoice = new self(
@@ -40,7 +42,16 @@ class Invoice extends AggregateRoot
             status: StatusEnum::Draft,
         );
 
-         $invoice->raise(new InvoiceCreatedEvent($id));
+        foreach ($invoiceProductLines as $productLine) {
+            $invoice->addInvoiceProductLine(
+                productLineId: $productLine->id,
+                name: $productLine->name,
+                quantity: $productLine->quantity,
+                unitPrice: $productLine->price,
+            );
+        }
+
+        $invoice->raise(new InvoiceCreatedEvent($id));
 
         return $invoice;
     }
@@ -99,6 +110,9 @@ class Invoice extends AggregateRoot
             throw new \DomainException("Cannot send an invoice that is not in draft status");
         }
 
+        // additional check before send - important for business logic
+        $this->validateProductLines();
+
         $this->status = StatusEnum::Sending;
 
         $this->raise(new InvoiceSendingEvent($this->id));
@@ -151,5 +165,15 @@ class Invoice extends AggregateRoot
             'status' => $this->status->value,
             'totalPrice' => $this->totalPrice->value,
         ];
+    }
+
+
+    private function validateProductLines() : void
+    {
+        foreach ($this->invoiceProductLines as $productLine) {
+            if ($productLine->quantity <= 0 || $productLine->price->value <= 0) {
+                throw new \DomainException("Product line must have quantity and price greater than zero");
+            }
+        }
     }
 }
